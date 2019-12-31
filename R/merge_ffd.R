@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' merge_ffd("~/data")
+#' \dontrun{merge_ffd("~/data")}
 merge_ffd <- function(folder){
 
   zips <- list.files(folder, full.names = TRUE)

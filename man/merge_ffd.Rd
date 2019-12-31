@@ -16,5 +16,5 @@ A tibble containg trade data
 Extract FFD trade data from all the zipfiles in a folder
 }
 \examples{
-merge_ffd("~/data")
+\dontrun{merge_ffd("~/data")}
 }

@@ -18,5 +18,5 @@ A tibble containing trade data
 folder
 }
 \examples{
-extract_ffd("152-2016.zip")
+\dontrun{extract_ffd("152-2016.zip")}
 }

@@ -10,16 +10,16 @@
 #' @export
 #'
 #' @examples
-#' extract_ffd("152-2016.zip")
+#' \dontrun{extract_ffd("152-2016.zip")}
 extract_ffd <- function(file){
 
   print(paste("Processing:", file))
   tmpdir <- tempdir()
   # get the csv filename from within the zipfile
-  filename <- unzip(file, list = TRUE)[1,1]
+  filename <- utils::unzip(file, list = TRUE)[1,1]
 
   # unzip into temporary directory, read in the csv and clean up (because the unzipped csvs can be massive)
-  unzip(file, exdir = tmpdir)
+  utils::unzip(file, exdir = tmpdir)
   all_trade <- readr::read_csv(paste0(tmpdir,"/", filename))
   file.remove(paste0(tmpdir,"/", filename))
 

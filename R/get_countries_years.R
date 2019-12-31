@@ -7,13 +7,15 @@
 #' @param token bulk download API access token
 #' @param dest_folder folder to save file in format id-year.<suffix>. Defaults
 #'   to working directory
-#' @param unzipwhether to unzip the downloaded file.
+#' @param unzip whether to unzip the downloaded file.
 #'
 #' @return data is saved into the location specifid in dest_folder
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' get_countries_years(c(2015:2018), c(152, 156), "xxxx", "~/downloads", FALSE)
+#' }
 get_countries_years <- function(periods,
                                 reporters,
                                 token = "",
