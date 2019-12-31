@@ -1,10 +1,12 @@
-#' Title
+#' get_country_year
 #'
-#' @param period
-#' @param reporter
-#' @param token
-#' @param dest_folder
-#' @param unzip
+#' Download complete trade for one country for one year.
+#'
+#' @param period year to request
+#' @param reporter country id
+#' @param token bulk dowload API access token
+#' @param dest_folder folder to save file in format id-year.<suffix>
+#' @param unzip whether to unzip the downloaded file
 #'
 #' @return
 #' @export
@@ -13,15 +15,14 @@
 get_country_year <- function(period = "2016",
                              reporter = "152",
                              token = "",
-                             dest_folder,
+                             dest_folder = getwd(),
                              unzip = FALSE)
   {
 
-# Download complete trade for one country for one year.
-# period: year to request
-# reporter: country id
-# token: bulk dowload api access token
-# dest_folder: folder to save file in format id-year.csv
+  if (token == "") {
+    stop("API key token required")
+  }
+
     url <- "http://comtrade.un.org/api/get/bulk/"
     type <- "C"
     freq <- "A"
@@ -31,7 +32,9 @@ get_country_year <- function(period = "2016",
     string <- paste0(url,type, "/", freq, "/", period, "/", reporter, "/", classification,"?token=", token)
 
     tmp <- tempfile()
+    # better error handling required
     try(download.file(string, destfile = tmp))
+    message(paste("Downloaded to", dest_folder))
 
     if (unzip == FALSE) {
 

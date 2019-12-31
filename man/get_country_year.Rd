@@ -2,14 +2,22 @@
 % Please edit documentation in R/get_country_year.R
 \name{get_country_year}
 \alias{get_country_year}
-\title{Title}
+\title{get_country_year}
 \usage{
 get_country_year(period = "2016", reporter = "152", token = "",
-  dest_folder, unzip = FALSE)
+  dest_folder = getwd(), unzip = FALSE)
 }
 \arguments{
-\item{unzip}{}
+\item{period}{year to request}
+
+\item{reporter}{country id}
+
+\item{token}{bulk dowload API access token}
+
+\item{dest_folder}{folder to save file in format id-year.<suffix>}
+
+\item{unzip}{whether to unzip the downloaded file}
 }
 \description{
-Title
+Download complete trade for one country for one year.
 }
