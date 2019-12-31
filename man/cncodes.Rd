@@ -13,7 +13,7 @@ cncodes
 }
 \description{
 A data frame of 5909 records and 26 variables containing commodity codes and
-descriptions. COdes cover the core FFD set and the FFD+ set.
+descriptions. Codes cover the core FFD set and the FFD+ set.
 }
 \details{
 \describe{ \item{Comcode}{8 digit commodity code}
