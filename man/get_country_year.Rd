@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_country_year.R
 \name{get_country_year}
 \alias{get_country_year}
-\title{get_country_year}
+\title{Download complete trade for one country for one year.}
 \usage{
 get_country_year(period = "2016", reporter = "152", token = "",
   dest_folder = getwd(), unzip = FALSE)
@@ -18,6 +18,14 @@ get_country_year(period = "2016", reporter = "152", token = "",
 
 \item{unzip}{whether to unzip the downloaded file}
 }
+\value{
+Data files are stored in the location specified in dest_folder
+}
 \description{
-Download complete trade for one country for one year.
+\code{get_country_year} is a low level function which downloads a single
+yeqars data. Use \code{\link{get_countries_years}} to acquire multiple countries and
+multiple years data.
+}
+\examples{
+get_country_year <- function(period = "2016",reporter = "152",token = "xxxx",dest_folder = "~/downloads",unzip = FALSE)
 }

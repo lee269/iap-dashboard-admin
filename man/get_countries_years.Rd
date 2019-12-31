@@ -14,10 +14,17 @@ get_countries_years(periods, reporters, token = "",
 
 \item{token}{bulk download API access token}
 
-\item{dest_folder}{folder to save file in format id-year.<suffix>. Defaults to working directory}
+\item{dest_folder}{folder to save file in format id-year.<suffix>. Defaults
+to working directory}
 
 \item{unzipwhether}{to unzip the downloaded file.}
 }
+\value{
+data is saved into the location specifid in dest_folder
+}
 \description{
 Download complete trade data for a set of countries and years
+}
+\examples{
+get_countries_years(c(2015:2018), c(152, 156), "xxxx", "~/downloads", FALSE)
 }

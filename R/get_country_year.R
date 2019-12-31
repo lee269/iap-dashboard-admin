@@ -1,6 +1,8 @@
-#' get_country_year
-#'
 #' Download complete trade for one country for one year.
+#'
+#' \code{get_country_year} is a low level function which downloads a single
+#' yeqars data. Use \code{\link{get_countries_years}} to acquire multiple countries and
+#' multiple years data.
 #'
 #' @param period year to request
 #' @param reporter country id
@@ -8,10 +10,11 @@
 #' @param dest_folder folder to save file in format id-year.<suffix>
 #' @param unzip whether to unzip the downloaded file
 #'
-#' @return
+#' @return Data files are stored in the location specified in dest_folder
 #' @export
 #'
 #' @examples
+#' get_country_year <- function(period = "2016",reporter = "152",token = "xxxx",dest_folder = "~/downloads",unzip = FALSE)
 get_country_year <- function(period = "2016",
                              reporter = "152",
                              token = "",
