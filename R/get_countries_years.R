@@ -1,6 +1,7 @@
-#' get_countries_years
-#'
 #' Download complete trade data for a set of countries and years
+#'
+#' A wrapper for \code{\link{get_country_year}} to allow acquisition of multiple
+#' countries and multiple years data.
 #'
 #' @param periods a vector of years
 #' @param reporters a vector of reporter (country) codes

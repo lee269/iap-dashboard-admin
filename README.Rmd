@@ -30,9 +30,26 @@ devtools::install_github("lee269/iapdashboardadmin")
 ```
 ## Example workflow
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
+```{r example, eval=FALSE}
 library(iapdashboardadmin)
-## basic example code
+
+# Acquire a number of individual countries annual trade data
+get_countries_years(periods = c(2010:2018),
+                    reporters = c(152, 156),
+                    token = "your token here",
+                    dest_folder = "~/downloads",
+                    unzip = FALSE)
+
+# Process all the downloaded files and extract only the food data
+ffd_trade_data <- merge_ffd(folder = "~/downloads")
+
+# Save for posterity
+saveRDS(ffd_trade_data, "~/data/ffd_data.rds")
+
 ```
+
+## To do (perhaps)
+
+* better error detection all round
+* maybe eliminate zip from the process and just return data frames
+* make extract_ffd able to return HS2 and HS6 if necessary, and/or FFD+ data

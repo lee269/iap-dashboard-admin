@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_countries_years.R
 \name{get_countries_years}
 \alias{get_countries_years}
-\title{get_countries_years}
+\title{Download complete trade data for a set of countries and years}
 \usage{
 get_countries_years(periods, reporters, token = "",
   dest_folder = getwd(), unzip = FALSE)
@@ -23,7 +23,8 @@ to working directory}
 data is saved into the location specifid in dest_folder
 }
 \description{
-Download complete trade data for a set of countries and years
+A wrapper for \code{\link{get_country_year}} to allow acquisition of multiple
+countries and multiple years data.
 }
 \examples{
 \dontrun{

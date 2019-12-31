@@ -1,13 +1,14 @@
 Package: iapdashboardadmin
-Title: What the Package Does (One Line, Title Case)
+Title: Tools for using the Comtrade bulk download API
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "David",
+           family = "Lee",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "david@lee269.co.uk",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: This is meant to support the backend data 
+    for a shiny based trade dashboard.
 Depends: R (>= 3.1.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
