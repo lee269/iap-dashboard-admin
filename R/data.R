@@ -39,7 +39,7 @@
 #' Comtrade reporter country codes
 #'
 #' A data frame of 5909 records and 26 variables containing commodity codes and
-#' descriptions. COdes cover the core FFD set and the FFD+ set.
+#' descriptions. Codes cover the core FFD set and the FFD+ set.
 #'
 #' \describe{ \item{id}{country id}
 #' \item{text}{Country name}
@@ -47,3 +47,15 @@
 #'
 #' @source Comtrade \url{http://comtrade.un.org}
 "reporters"
+
+
+#' Country details
+#'
+#' A data frame of 174 records and 11 variables containing country metadata.
+#'
+#' \describe{
+#' \item{stuff to do}{...}
+#' }
+#'
+#' @source Comtrade \url{http://comtrade.un.org}
+"countries"

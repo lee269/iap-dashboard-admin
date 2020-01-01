@@ -23,7 +23,7 @@ Data files are stored in the location specified in dest_folder
 }
 \description{
 \code{get_country_year} is a low level function which downloads a single
-yeqars data. Use \code{\link{get_countries_years}} to acquire multiple
+years data. Use \code{\link{get_countries_years}} to acquire multiple
 countries and multiple years data.
 }
 \examples{
