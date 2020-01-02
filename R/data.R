@@ -55,6 +55,7 @@
 #'
 #' \describe{
 #' \item{stuff to do}{...}
+#'
 #' }
 #'
 #' @source Comtrade \url{http://comtrade.un.org}
