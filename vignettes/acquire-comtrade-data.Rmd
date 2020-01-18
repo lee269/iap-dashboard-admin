@@ -1,0 +1,210 @@
+---
+title: "Dashboard setup: acquire Comtrade data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{acquire-comtrade-data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Storing the API key
+
+A good way of keeping the API key safe is to store it in the .Renviron file
+
+```{r, eval=FALSE}
+# .Renviron file setup
+usethis::edit_r_environ()
+
+# Your .Renviron file opens for editing
+# Text to add, as an example
+# COMTRADE_KEY=<text of your key>
+
+# once set, you can retrieve the key with 
+Sys.getenv("COMTRADE_KEY")
+```
+
+## Acquiring dashboard data
+
+Code below doesnt include every country in the world, and a lot of them are ex countries which could be weeded out.
+
+```{r, eval=FALSE}
+# Process for downloading Comtrade data and extracting FFD trade
+# Best run as a job in Rstudio
+
+library(iapdashboardadmin)
+
+key <- Sys.getenv("COMTRADE_KEY")
+folder <- here::here("data", "downloads")
+
+yrs <- c(2010:2018)
+ctys <- c(660, 533, 112, 58, 84, 204, 60, 64, 68, 535, 92, 96, 854, 108, 132,
+          116, 136, 140, 148, 344, 446, 174, 178, 184, 384, 192, 531, 200, 408, 180,
+          262, 212, 214, 588, 218, 222, 226, 232, 97, 234, 238, 886, 278, 866, 720, 230,
+          280, 582, 590, 592, 868, 717, 736, 835, 810, 890, 836, 254, 258, 583, 266,
+          270, 268, 288, 292, 304, 308, 312, 320, 324, 624, 328, 332, 336, 340, 356,
+          368, 400, 398, 296, 414, 417, 418, 422, 426, 430, 434, 450, 454, 462, 466,
+          470, 584, 474, 478, 480, 175, 496, 500, 508, 104, 580, 516, 524, 530, 532,
+          540, 558, 562, 512, 490, 585, 598, 600, 459, 634, 498, 638, 646, 647, 461,
+          654, 659, 658, 662, 534, 666, 670, 882, 674, 678, 457, 686, 891, 690, 694,
+          711,  90, 706, 728, 144, 275, 729, 740, 748, 757, 760, 762, 807, 626, 768,
+          772, 776, 780, 788, 795, 796, 798, 800, 826, 834, 858, 850, 841, 860, 548,
+          862, 876, 887, 894, 716)
+
+iapdashboardadmin::get_countries_years(periods = yrs,
+                                       reporters = ctys,
+                                       token = key,
+                                       dest_folder = folder,
+                                       unzip = FALSE)
+
+ffd_trade <- iapdashboardadmin::merge_ffd(here::here("data", "downloads"))
+
+saveRDS(ffd_trade, here::here("data", "db", paste0(Sys.Date(), "_ffd_trade.rds")))
+
+```
+
+## Data availability summary
+
+Its useful to build a dataset containing a summary of the data that has been acquired
+
+```{r, eval=FALSE}
+# Produce a dataframe containing availability of data in the ffd_trade data
+
+library(tidyverse)
+
+reporters <- iapdashboardadmin::reporters
+ffd_trade <- readRDS(here::here("data", "db", "ffd_trade.rds"))
+
+
+data <- ffd_trade %>% 
+                select(reporter_code, reporter, year) %>% 
+                group_by(reporter_code, reporter, year) %>% 
+                summarise(count = TRUE) %>% 
+                pivot_wider(names_from = year, values_from = year) %>% 
+                select(-count)
+
+availability <- reporters %>% 
+      left_join(data, by = c("id" = "reporter_code")) %>% 
+      select(-reporter) %>% 
+      rename(reporter = text,
+             reporter_code = id)
+
+```
+
+## Setting up FFD indicators for the dashboard
+
+We dont want the dashboard to have to work with the large dataset we have extracted from Comtrade dynamically.
+Instead we set up the indicators we want and save them in a much smaller dataset.
+
+```{r, eval=FALSE}
+library(tidyverse)
+library(broom)
+
+ffd_trade <- readRDS(here::here("data", "db", "ffd_trade.rds"))
+
+
+# Current setup ----------------------------------------------------------------
+
+# Get a list of all the countries in the main dataset
+all_data <- ffd_trade %>% 
+  group_by(reporter_code, reporter_iso, reporter) %>% 
+  summarise(n = n()) %>% 
+  select(-n)
+
+# Total food imports and market size rating by year
+total_food_imports <- ffd_trade %>% 
+  filter(partner_iso == "WLD") %>% 
+  group_by(reporter, year) %>% 
+  summarise(total_food_imports_value = sum(trade_value_us)) %>% 
+  group_by(year) %>% 
+  mutate(total_food_imports_rating = ntile(total_food_imports_value, 4)) %>% 
+  arrange(year, total_food_imports_value)
+
+
+# Total UK food imports by year
+uk_food_imports <- ffd_trade %>% 
+  filter(partner_iso == "GBR") %>% 
+  group_by(reporter, year) %>% 
+  summarise(uk_food_imports = sum(trade_value_us)) 
+
+
+uk_market_share <- ffd_trade %>% 
+  filter(partner_iso %in% c("WLD", "GBR")) %>% 
+  select(year, reporter, partner_iso, commodity, commodity_code, trade_value_us) %>%
+  group_by(year, reporter, partner_iso) %>% 
+  summarise(trade_value_us = sum(trade_value_us)) %>% 
+  pivot_wider(id_cols = c(year, reporter), names_from = partner_iso, values_from = trade_value_us) %>% 
+  filter(GBR > 0) %>% 
+  mutate(uk_market_share = (GBR/WLD)*100) %>% 
+  arrange(reporter, year)
+
+export_diversity <- ffd_trade %>%
+  filter(partner_iso == "GBR") %>% 
+  group_by(reporter, year, commodity_code) %>% 
+  summarise(count = n()) %>% 
+  group_by(reporter, year) %>% 
+  summarise(uk_export_diversity = sum(count))
+
+dominant_products <- ffd_trade %>%
+  filter(partner_iso == "GBR") %>%
+  select(year, reporter, commodity, commodity_code, trade_value_us) %>%
+  group_by(year, reporter) %>% 
+  mutate(uk_percentage = (trade_value_us/sum(trade_value_us)*100)) %>% 
+  arrange(year, reporter, desc(uk_percentage)) %>% 
+  slice(1)
+
+ffd_indicators %>% 
+  filter(reporter == "Argentina") %>% 
+  pivot_longer(cols = c(total_food_imports, uk_food_imports, uk_mkt_share_growth)) %>% knitr::kable()
+
+all_data <- all_data %>% 
+  left_join(total_food_imports) %>% 
+  left_join(uk_food_imports) %>% 
+  left_join(uk_market_share) %>% 
+  left_join(dominant_products)
+
+# saveRDS(all_data, here::here("data", "db", "ffd_indicators.rds"))
+
+
+# Models - this isnt working yet -------------------------------------------------------
+
+
+trade_model <- function(df) {
+  lm(uk_market_share ~ year, data = df)
+}
+
+mods <- indicators %>% 
+  group_by(reporter) %>% 
+  nest() %>% 
+  mutate(model = map(data, trade_model),
+         details = coefficients(model),
+         preds = map2(data, model, modelr::add_predictions)) 
+
+
+preds <- unnest(mods, preds)
+
+preds %>% 
+  filter(reporter != "Ireland") %>% 
+  ggplot(aes(x = year, colour = reporter)) +
+  geom_line(aes(y = pred, group = reporter), alpha = 1 / 3) + 
+  geom_line(aes(y = uk_market_share, group = reporter), alpha = 1 / 3) +
+  geom_smooth(aes(y = pred), se = FALSE) +
+  facet_grid(~ reporter) +
+  theme(legend.position = "none")
+
+
+cncodes <- read_csv(here::here("data", "reference", "CN CODES MASTER TABLE.csv")) %>% 
+  select(`HS6 code`, `HS6 Description`, `FFD DESC`) %>% 
+  group_by(`HS6 code`, `FFD DESC`) %>% 
+  summarise(count = n()) %>% 
+  filter(`FFD DESC` != "Not entered")
+
+cncodes$`HS6 code`[duplicated(cncodes$`HS6 code`)]
+
+```
