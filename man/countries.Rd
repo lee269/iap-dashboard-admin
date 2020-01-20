@@ -17,6 +17,7 @@ A data frame of 174 records and 11 variables containing country metadata.
 \details{
 \describe{
 \item{stuff to do}{...}
+
 }
 }
 \keyword{datasets}

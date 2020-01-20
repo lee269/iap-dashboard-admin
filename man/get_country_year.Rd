@@ -4,8 +4,13 @@
 \alias{get_country_year}
 \title{Download complete trade for one country for one year.}
 \usage{
-get_country_year(period = "2016", reporter = "152", token = "",
-  dest_folder = getwd(), unzip = FALSE)
+get_country_year(
+  period = "2016",
+  reporter = "152",
+  token = "",
+  dest_folder = getwd(),
+  unzip = FALSE
+)
 }
 \arguments{
 \item{period}{year to request}
