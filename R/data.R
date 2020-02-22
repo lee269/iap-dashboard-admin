@@ -60,3 +60,15 @@
 #'
 #' @source Comtrade \url{http://comtrade.un.org}
 "countries"
+
+#' FFD trade data
+#'
+#' A data frame of 174 records and 11 variables containing country metadata.
+#'
+#' \describe{
+#' \item{stuff to do}{...}
+#'
+#' }
+#'
+#' @source Comtrade \url{http://comtrade.un.org}
+"ffd_trade"
