@@ -4,8 +4,13 @@
 \alias{get_countries_years}
 \title{Download complete trade data for a set of countries and years}
 \usage{
-get_countries_years(periods, reporters, token = "",
-  dest_folder = getwd(), unzip = FALSE)
+get_countries_years(
+  periods,
+  reporters,
+  token = "",
+  dest_folder = getwd(),
+  unzip = FALSE
+)
 }
 \arguments{
 \item{periods}{a vector of years}
